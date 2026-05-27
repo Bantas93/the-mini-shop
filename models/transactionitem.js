@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
           notNull: {
             msg: "Quantity Required!",
           },
+          min: {
+            args: 1,
+            msg: "Minimum quantity is 1",
+          },
         },
       },
       TransactionId: {
