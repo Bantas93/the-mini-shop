@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Kaos Sablon",
+    "price": 120000,
+    "stock": 50,
+    "CategoryId": 1
+  },
+  {
+    "name": "Hoodie Keren",
+    "price": 250000,
+    "stock": 30,
+    "CategoryId": 1
+  },
+  {
+    "name": "Sepatu Running",
+    "price": 450000,
+    "stock": 20,
+    "CategoryId": 1
+  },
+  {
+    "name": "Mouse",
+    "price": 175000,
+    "stock": 40,
+    "CategoryId": 2
+  },
+  {
+    "name": "Keyboard",
+    "price": 650000,
+    "stock": 15,
+    "CategoryId": 2
+  },
+  {
+    "name": "Speaker",
+    "price": 320000,
+    "stock": 25,
+    "CategoryId": 2
+  },
+  {
+    "name": "Mie Goreng Indonesia",
+    "price": 3500,
+    "stock": 200,
+    "CategoryId": 3
+  },
+  {
+    "name": "Susu 1L",
+    "price": 18000,
+    "stock": 80,
+    "CategoryId": 3
+  },
+  {
+    "name": "Kopi Kapal Titanic",
+    "price": 95000,
+    "stock": 35,
+    "CategoryId": 3
+  },
+  {
+    "name": "Cokelat Batang",
+    "price": 27000,
+    "stock": 60,
+    "CategoryId": 3
+  }
+]
