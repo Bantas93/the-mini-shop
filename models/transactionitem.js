@@ -13,9 +13,42 @@ module.exports = (sequelize, DataTypes) => {
   }
   TransactionItem.init(
     {
-      qty: DataTypes.INTEGER,
-      TransactionId: DataTypes.INTEGER,
-      ProductId: DataTypes.INTEGER,
+      qty: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Quantity Required!",
+          },
+          notNull: {
+            msg: "Quantity Required!",
+          },
+        },
+      },
+      TransactionId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Transaction Required!",
+          },
+          notNull: {
+            msg: "Transaction Required!",
+          },
+        },
+      },
+      ProductId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Product Required!",
+          },
+          notNull: {
+            msg: "Product Required!",
+          },
+        },
+      },
     },
     {
       sequelize,
