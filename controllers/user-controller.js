@@ -6,11 +6,12 @@ const {
   Transaction,
   TransactionItem,
 } = require("../models");
-
+const bcrypt = require("bcryptjs");
 class UserController {
   static async formLogin(req, res) {
     try {
-      res.render("formLogin");
+      const { error } = req.query;
+      res.render("formLogin", { error });
     } catch (error) {
       res.send(error);
     }
@@ -18,7 +19,24 @@ class UserController {
 
   static async postLogin(req, res) {
     try {
-      res.send(req.body);
+      const { email, password } = req.body;
+      const user = await User.findOne({ where: { email } });
+
+      if (user) {
+        const UserPassword = user.password;
+        const isValidPassword = bcrypt.compareSync(password, UserPassword);
+
+        if (isValidPassword) {
+          req.session.UserId = user.id;
+          return res.redirect("/");
+        } else {
+          const error = "Invalid password";
+          return res.redirect(`/user/login?error=${error}`);
+        }
+      } else {
+        const error = "Invalid email";
+        return res.redirect(`/user/login?error=${error}`);
+      }
     } catch (error) {
       res.send(error);
     }

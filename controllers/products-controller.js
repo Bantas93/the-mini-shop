@@ -1,10 +1,39 @@
+const { Op } = require("sequelize");
 const { formatedCurrency } = require("../helpers");
-const { Product } = require("../models");
+const { Product, Category } = require("../models");
 
 class ProductController {
   static async getProducts(req, res) {
     try {
-      const Products = await Product.findAll();
+      const { name, Search } = req.query;
+      console.log(req.session.UserId);
+      const includeOptions = {
+        model: Category,
+        required: false,
+      };
+
+      if (name) {
+        includeOptions.where = { name };
+        includeOptions.required = true;
+      }
+
+      let Products = await Product.findAll({
+        include: includeOptions,
+      });
+
+      if (Search) {
+        if (Search) {
+          Products = await Product.findAll({
+            where: {
+              name: {
+                [Op.iLike]: `%${Search}%`,
+              },
+            },
+          });
+        }
+      }
+
+      // res.send(Search);
       res.render("products", { Products, formatedCurrency });
     } catch (error) {
       res.send(error);

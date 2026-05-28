@@ -34,6 +34,14 @@ class TransactionController {
       res.send(error);
     }
   }
+
+  static async transactionHistory(req, res) {
+    try {
+      res.render("history");
+    } catch (error) {
+      res.send(error);
+    }
+  }
 }
 
 module.exports = TransactionController;

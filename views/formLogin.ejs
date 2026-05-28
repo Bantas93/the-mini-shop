@@ -43,13 +43,18 @@
                     <input type="password" name="password" class="form-control" placeholder="Enter password" required />
                 </div>
 
-                <div class="mb-4 text-center">
-                    <p>Don't have account ? <a href="/user/register">Register</a></p>
-                </div>
+                <% if (error) { %>
+                    <p class="text-center text-danger">
+                        <%= error %>
+                    </p>
+                    <% } %>
+                        <div class="mb-4 text-center">
+                            <p>Don't have account ? <a href="/user/register">Register</a></p>
+                        </div>
 
-                <button type="submit" class="btn btn-primary w-100">
-                    Login
-                </button>
+                        <button type="submit" class="btn btn-primary w-100">
+                            Login
+                        </button>
 
             </form>
 
