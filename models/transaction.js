@@ -8,6 +8,18 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "TransactionId",
       });
     }
+    static async getCartByUser(userId, models) {
+      return await Transaction.findOne({
+        where: {
+          userId: userId
+        },
+        include: {
+          model: models.TransactionItem,
+          include: models.Product
+        },
+        order: [["createdAt", "DESC"]]
+      })
+    }
   }
   Transaction.init(
     {
@@ -22,8 +34,8 @@ module.exports = (sequelize, DataTypes) => {
             msg: "Category name Required!",
           },
           min: {
-            args: 1,
-            msg: "Total Price must be greater than 1",
+            args: [0],
+            msg: "Total Price must be greater than 0",
           },
         },
       },

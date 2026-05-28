@@ -27,14 +27,15 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        Helo
+                    <a class="nav-link" href="/cart">
+                        Cart
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/cart">
-                        Cart
+                    <a class="nav-link" href="#">
+                        <%= JSON.stringify(req.session.name) %>
+                        Hello, <%= req.session.name %> 
                     </a>
                 </li>
 

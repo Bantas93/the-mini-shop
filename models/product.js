@@ -6,6 +6,9 @@ module.exports = (sequelize, DataTypes) => {
       Product.belongsTo(models.Category, { foreignKey: "CategoryId" });
       Product.hasMany(models.TransactionItem, { foreignKey: "ProductId" });
     }
+    get formatPrice(){
+      return `Rp ${Number(this.price).toLocaleString("id-ID")}`
+    }
   }
   Product.init(
     {
