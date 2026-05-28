@@ -15,16 +15,24 @@
 <body>
     <%- include('./partials/navbar.ejs') %>
 
-        <div class="container">
+        <div class="container text-center mt-4">
             <h1>Hi, <%= Profiled.username %>
             </h1>
-            <p>Your role is <%= Profiled.role %>
+            <p>Your role is <strong>
+                    <%= Profiled.role %>
+                </strong>
             </p>
-            <p>Your Email is <%= Profiled.email %>
+            <p>Your Email is <strong>
+                    <%= Profiled.email %>
+                </strong>
             </p>
-            <p>Address : <%= Profiled.Profile.address %>
+            <p>Address :<strong>
+                    <%= Profiled.Profile.address %>
+                </strong>
             </p>
-            <p>Address : <%= Profiled.Profile.phoneNumber %>
+            <p>Phone number :<strong>
+                    <%= Profiled.Profile.phoneNumber %>
+                </strong>
             </p>
 
             <a href="/user/<%= Profiled.id %>/edit" class="btn btn-primary">Edit Profile</a>

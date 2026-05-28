@@ -3,20 +3,24 @@ const fs = require("fs");
 const { Transaction, TransactionItem, Product } = require("../models");
 const { where } = require("sequelize");
 const { log } = require("console");
+const { formatedCurrency } = require("../helpers");
 
 class TransactionController {
   static async getCart(req, res) {
     try {
+      const { productName } = req.query;
       const transaction = await Transaction.findOne({
         where: {
           UserId: req.session.UserId,
+          status: "cart",
         },
         include: {
           model: TransactionItem,
           include: Product,
         },
       });
-      res.render("cart", { transaction });
+
+      res.render("cart", { transaction, productName });
     } catch (error) {
       res.send(error);
     }
@@ -25,9 +29,11 @@ class TransactionController {
   static async addToCart(req, res) {
     try {
       const { ProductId } = req.body;
+
       let transaction = await Transaction.findOne({
         where: {
           UserId: req.session.UserId,
+          status: "cart",
         },
       });
 
@@ -36,6 +42,7 @@ class TransactionController {
           totalPrice: 0,
           date: new Date(),
           UserId: req.session.UserId,
+          status: "cart",
         });
       }
 
@@ -95,6 +102,7 @@ class TransactionController {
         return res.redirect("/cart");
       }
 
+      const productName = item.Product.dataValues.name;
       const transaction = await Transaction.findByPk(item.TransactionId);
       await item.destroy();
 
@@ -112,7 +120,7 @@ class TransactionController {
 
       await transaction.update({ totalPrice: total });
 
-      res.redirect("/cart");
+      res.redirect(`/cart?productName=${productName}`);
     } catch (error) {
       console.log(error);
       res.send(error);
@@ -124,6 +132,7 @@ class TransactionController {
       const transaction = await Transaction.findOne({
         where: {
           UserId: req.session.UserId,
+          status: "cart",
         },
         include: {
           model: TransactionItem,
@@ -134,6 +143,19 @@ class TransactionController {
       if (!transaction) {
         return res.send("Cart Empty");
       }
+
+      for (let i = 0; i < transaction.TransactionItems.length; i++) {
+        let item = transaction.TransactionItems[i];
+        let product = await Product.findByPk(item.ProductId);
+
+        if (product.stock < item.qty) {
+          return res.send(`Stok produk "${product.name}" tidak mencukupi.`);
+        }
+      }
+
+      const totalPrice = transaction.TransactionItems.reduce((sum, el) => {
+        return sum + Number(el.Product.price) * el.qty;
+      }, 0);
 
       let products = [];
 
@@ -148,14 +170,21 @@ class TransactionController {
       const data = {
         sender: {
           company: "Mini Shop",
+          address: "Jl. Maju Terus",
+          zip: "1234",
+          city: "Jakarta",
         },
+
         client: {
-          company: req.session.name,
+          company: `Customer : ${req.session.name}`,
+          address: `Address : ${req.session.address}`,
         },
+
         information: {
           number: `${transaction.id}`,
           date: new Date().toLocaleDateString("id-ID"),
         },
+
         products,
 
         settings: {
@@ -168,31 +197,26 @@ class TransactionController {
 
         bottomNotice: "Thank you for shopping! Hope to see you again soon",
       };
+
       const result = await easyinvoice.createInvoice(data);
+
       fs.writeFileSync("invoice.pdf", result.pdf, "base64");
 
       for (let i = 0; i < transaction.TransactionItems.length; i++) {
         let item = transaction.TransactionItems[i];
+
         let product = await Product.findByPk(item.ProductId);
 
-        if (product.stock < item.qty) {
-          return res.send(`Stok produk "${product.name}" tidak mencukupi.`);
-        }
+        await product.update({
+          stock: product.stock - item.qty,
+        });
       }
 
-      for (let i = 0; i < transaction.TransactionItems.length; i++) {
-        let item = transaction.TransactionItems[i];
-        let product = await Product.findByPk(item.ProductId);
-        await product.update({ stock: product.stock - item.qty });
-      }
-
-      await TransactionItem.destroy({
-        where: {
-          TransactionId: transaction.id,
-        },
+      await transaction.update({
+        totalPrice,
+        status: "completed",
       });
 
-      await transaction.destroy();
       return res.download("invoice.pdf");
     } catch (error) {
       res.send(error);
@@ -201,7 +225,21 @@ class TransactionController {
 
   static async transactionHistory(req, res) {
     try {
-      res.render("history");
+      const transactions = await Transaction.findAll({
+        where: {
+          UserId: req.session.UserId,
+          status: "completed",
+        },
+
+        include: {
+          model: TransactionItem,
+          include: Product,
+        },
+
+        order: [["createdAt", "DESC"]],
+      });
+      // res.send(transactions);
+      res.render("history", { transactions, formatedCurrency });
     } catch (error) {
       res.send(error);
     }

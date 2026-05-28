@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const {
   User,
   Profile,
@@ -22,6 +23,12 @@ class UserController {
       const { email, password } = req.body;
       const user = await User.findOne({ where: { email } });
       const { dataValues } = user;
+      const profile = await Profile.findOne({
+        where: {
+          UserId: dataValues.id,
+        },
+      });
+
       if (user) {
         const UserPassword = user.password;
         const isValidPassword = bcrypt.compareSync(password, UserPassword);
@@ -31,6 +38,8 @@ class UserController {
           req.session.name = dataValues.username;
           req.session.email = dataValues.email;
           req.session.role = dataValues.role;
+          req.session.address = profile.dataValues.address;
+          req.session.phoneNumber = profile.dataValues.phoneNumber;
           return res.redirect("/");
         } else {
           const error = "Invalid password";
@@ -57,14 +66,22 @@ class UserController {
 
   static async postRegister(req, res) {
     try {
-      const { username, email, password, role } = req.body;
-      await User.create({
+      const { username, email, password, role, address, phoneNumber } =
+        req.body;
+
+      const user = await User.create({
         username,
         password,
         role,
         email,
       });
-      // res.send(req.body);
+
+      await Profile.create({
+        address,
+        phoneNumber,
+        UserId: user.id,
+      });
+
       res.redirect("/user/login");
     } catch (error) {
       res.send(error);
@@ -101,7 +118,28 @@ class UserController {
 
   static async postEditProfile(req, res) {
     try {
-      res.send(req.body);
+      const { username, email, address, phoneNumber, role } = req.body;
+      const { userId } = req.params;
+      await User.update(
+        {
+          username,
+          email,
+          role,
+        },
+        {
+          where: { id: userId },
+        },
+      );
+      await Profile.update(
+        {
+          address,
+          phoneNumber,
+        },
+        {
+          where: { UserId: userId },
+        },
+      );
+      res.redirect(`/user/${userId}`);
     } catch (error) {
       res.send(error);
     }

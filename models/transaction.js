@@ -11,14 +11,14 @@ module.exports = (sequelize, DataTypes) => {
     static async getCartByUser(userId, models) {
       return await Transaction.findOne({
         where: {
-          userId: userId
+          userId: userId,
         },
         include: {
           model: models.TransactionItem,
-          include: models.Product
+          include: models.Product,
         },
-        order: [["createdAt", "DESC"]]
-      })
+        order: [["createdAt", "DESC"]],
+      });
     }
   }
   Transaction.init(
@@ -50,6 +50,19 @@ module.exports = (sequelize, DataTypes) => {
             msg: "Date Transaction Required!",
           },
         },
+      },
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Date Transaction Required!",
+          },
+          notNull: {
+            msg: "Date Transaction Required!",
+          },
+        },
+        defaultValue: "cart",
       },
       UserId: {
         type: DataTypes.INTEGER,

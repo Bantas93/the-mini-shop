@@ -80,9 +80,9 @@
                     </label>
 
                     <select name="role" class="form-select">
-                        <option value="">Choose role</option>
-                        <option value="admin">Admin</option>
-                        <option value="customer">Customer</option>
+                        <option value="" disabled>Choose role</option>
+                        <option value="admin" <%=Profiled.User.role==="admin" ?"selected":"" %>>Admin</option>
+                        <option value="customer" <%=Profiled.User.role==="customer" ?"selected":"" %>>Customer</option>
                     </select>
                 </div>
 

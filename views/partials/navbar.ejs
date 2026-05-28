@@ -5,7 +5,6 @@
         <a class="navbar-brand fw-bold" href="/">
             Mini-Shop
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -15,26 +14,32 @@
             <ul class="navbar-nav ms-auto">
 
                 <li class="nav-item">
-                    <a class="nav-link active" href="/">
+                    <a class="nav-link fw-bold" href="/">
                         Home
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/transaction/history">
+                    <a class="nav-link fw-bold" href="/transaction/history">
                         History
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/cart">
+                    <a class="nav-link fw-bold" href="/cart">
                         Cart
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/user/<%= req.session.UserId %>">
+                    <a class="nav-link fw-bold" href="/user/<%= req.session.UserId %>">
                         Hello, <%= req.session.name %>
+                    </a>
+                </li>
+
+                <li class="nav-item ms-4">
+                    <a href="/logout" class="nav-link fw-bold border rounded shadow">
+                        Logout
                     </a>
                 </li>
 

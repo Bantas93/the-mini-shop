@@ -17,73 +17,80 @@
     <%- include('./partials/navbar.ejs') %>
 
         <div class="container py-5">
-
             <h2 class="fw-bold mb-4">
                 Cart
             </h2>
 
-            <div class="row g-4">
-                <% if(transaction && transaction.TransactionItems.length) { %>
+            <% if (productName) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>
+                        <%= productName %>
+                    </strong> Success deleted!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <% } %>
 
-                    <% transaction.TransactionItems.forEach(el=> { %>
+                    <div class="row g-4">
+                        <% if(transaction && transaction.TransactionItems.length) { %>
+                            <% transaction.TransactionItems.forEach(el=> { %>
 
-                        <div class="col-md-4 col-lg-3">
+                                <div class="col-md-4 col-lg-3">
 
-                            <div class="card shadow-sm h-100">
+                                    <div class="card shadow-sm h-100">
 
-                                <div class="card-body d-flex flex-column">
+                                        <div class="card-body d-flex flex-column">
 
-                                    <h5 class="card-title fw-bold">
-                                        <%= el.Product.name %>
-                                    </h5>
+                                            <h5 class="card-title fw-bold">
+                                                <%= el.Product.name %>
+                                            </h5>
 
-                                    <p class="card-text mb-2">
-                                        Price :
-                                        <span class="fw-semibold">
-                                            <%= el.Product.formatPrice %>
-                                        </span>
-                                    </p>
+                                            <p class="card-text mb-2">
+                                                Price :
+                                                <span class="fw-semibold">
+                                                    <%= el.Product.formatPrice %>
+                                                </span>
+                                            </p>
 
-                                    <p class="card-text mb-4">
-                                        Qty :
-                                        <span class="badge bg-success">
-                                            <%= el.qty %>
-                                        </span>
-                                    </p>
+                                            <p class="card-text mb-4">
+                                                Qty :
+                                                <span class="badge bg-success">
+                                                    <%= el.qty %>
+                                                </span>
+                                            </p>
 
-                                    <form method="post" action="/cart/remove/<%= el.id %>">
-                                        <button class="btn btn-danger mt-auto">
-                                            Delete
-                                        </button>
-                                    </form>
+                                            <form method="post" action="/cart/remove/<%= el.id %>">
+                                                <button class="btn btn-danger mt-auto">
+                                                    Delete
+                                                </button>
+                                            </form>
+
+                                        </div>
+
+                                    </div>
 
                                 </div>
 
-                            </div>
+                                <% }) %>
 
-                        </div>
+                                    <% } else { %>
+                                        <h6 class="text-center">Cart Empty</h6>
 
-                        <% }) %>
+                                        <% } %>
 
-                            <% } else { %>
-                                <h3>Cart Empty</h3>
+                    </div>
+                    <br>
 
-                                <% } %>
-
-            </div>
-            <br>
-
-            <% if(transaction && transaction.TransactionItems.length) { %>
-                <h4>
-                    Total :
-                    Rp <%= Number(transaction.totalPrice).toLocaleString("id-ID") %>
-                </h4>
-                <form method="post" action="/checkout">
-                    <button class="btn btn-success">
-                        Checkout
-                    </button>
-                </form>
-                <% } %>
+                    <% if(transaction && transaction.TransactionItems.length) { %>
+                        <h4>
+                            Total :
+                            Rp <%= Number(transaction.totalPrice).toLocaleString("id-ID") %>
+                        </h4>
+                        <form method="post" action="/checkout">
+                            <button class="btn btn-success">
+                                Checkout
+                            </button>
+                        </form>
+                        <% } %>
         </div>
 
 </body>

@@ -19,12 +19,17 @@ router.use(function (req, res, next) {
 
 router.use("/", routeProducts);
 
-// buat add produk
 router.get("/cart", TransactionController.getCart);
 router.post("/cart/add", TransactionController.addToCart);
 router.post("/cart/remove/:id", TransactionController.removeItem);
 router.post("/checkout", TransactionController.checkout);
 
 router.get("/transaction/history", TransactionController.transactionHistory);
+
+router.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/user/login");
+  });
+});
 
 module.exports = router;
