@@ -10,6 +10,7 @@ class TransactionController {
       const transaction = await Transaction.findOne({
         where: {
           UserId: req.session.UserId,
+          status: "cart"
         },
         include: {
           model: TransactionItem,
@@ -28,6 +29,7 @@ class TransactionController {
       let transaction = await Transaction.findOne({
         where: {
           UserId: req.session.UserId,
+          status: "cart"
         },
       });
 
@@ -36,6 +38,7 @@ class TransactionController {
           totalPrice: 0,
           date: new Date(),
           UserId: req.session.UserId,
+          status: "cart"
         });
       }
 
@@ -192,7 +195,17 @@ class TransactionController {
         },
       });
 
-      await transaction.destroy();
+      await transaction.update({
+        status: "checkout"
+      })
+
+      await Transaction.create({
+        totalPrice: 0,
+        status: "cart",
+        date: new Date(),
+        UserId: req.session.UserId
+      })
+
       return res.download("invoice.pdf");
     } catch (error) {
       res.send(error);
@@ -201,7 +214,28 @@ class TransactionController {
 
   static async transactionHistory(req, res) {
     try {
-      res.render("history");
+      const transactions = await Transaction.findAll({
+        where: {
+          UserId: req.session.UserId,
+          status: "checkout"
+        },
+        include: [
+          {
+          model: TransactionItem,
+          include: [
+            {
+              model: Product
+            }
+          ]
+          }
+        ],
+        order: [
+          ["createdAt", "DESC"]
+        ]
+      })
+      res.send(transactions)
+      // res.render("history", { transactions });
+
     } catch (error) {
       res.send(error);
     }

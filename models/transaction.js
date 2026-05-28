@@ -39,6 +39,11 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      status: {
+        type: DataTypes.STRING,
+        defaultValue: "cart"
+      },
+
       date: {
         type: DataTypes.DATE,
         allowNull: false,
