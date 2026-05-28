@@ -33,9 +33,8 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <%= JSON.stringify(req.session.name) %>
-                        Hello, <%= req.session.name %> 
+                    <a class="nav-link" href="/user/<%= req.session.UserId %>">
+                        Hello, <%= req.session.name %>
                     </a>
                 </li>
 

@@ -6,7 +6,6 @@ class ProductController {
   static async getProducts(req, res) {
     try {
       const { name, Search } = req.query;
-      console.log(req.session.UserId);
       const includeOptions = {
         model: Category,
         required: false,

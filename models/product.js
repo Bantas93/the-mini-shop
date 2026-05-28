@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       Product.belongsTo(models.Category, { foreignKey: "CategoryId" });
       Product.hasMany(models.TransactionItem, { foreignKey: "ProductId" });
     }
-    get formatPrice(){
-      return `Rp ${Number(this.price).toLocaleString("id-ID")}`
+    get formatPrice() {
+      return `Rp ${Number(this.price).toLocaleString("id-ID")}`;
     }
   }
   Product.init(
@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
             msg: "Stock Required!",
           },
           min: {
-            args: 0,
+            args: [0],
             msg: "Stock must be greater than 0",
           },
         },
