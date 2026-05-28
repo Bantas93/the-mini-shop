@@ -37,6 +37,13 @@ class UserController {
         const error = "Invalid email";
         return res.redirect(`/user/login?error=${error}`);
       }
+      req.session.UserId = user.id;
+      req.session.email = user.email;
+      req.session.name = user.name;
+      console.log(req.session.name);
+      
+
+      res.redirect("/")
     } catch (error) {
       res.send(error);
     }
@@ -69,11 +76,14 @@ class UserController {
   static async getProfile(req, res) {
     try {
       const { userId } = req.params;
-      const Profiled = await Profile.findByPk(userId, {
-        include: User,
-      });
-      res.send(Profiled);
-      // res.render("profile", { Profiled });
+      const Profiled = await Profile.findOne({
+        where: {
+          UserId: userId
+        },
+        include: User
+      })
+      // res.send(Profiled);
+      res.render("profile", { Profiled });
     } catch (error) {
       res.send(error);
     }
@@ -82,8 +92,11 @@ class UserController {
   static async formEditProfile(req, res) {
     try {
       const { userId } = req.params;
-      const Profiled = await Profile.findByPk(userId, {
-        include: User,
+      const Profiled = await Profile.findOne({
+        where: {
+          UserId: userId
+        },
+        include: User
       });
       // res.send(Profiled);
       res.render("editProfile", { Profiled });
@@ -95,16 +108,35 @@ class UserController {
   static async postEditProfile(req, res) {
     try {
       const { userId } = req.params;
-      const Profiled = await Profile.update({
+      const {
+        firstName,
+        lastName,
+        address
+      } = req.body
+      await Profile.update({
+        firstName,
+        lastName,
+        address
+      },
+      {
         where: {
-          UserId,
-        },
+          UserId: userId
+        }
       });
-      res.redirect("/user");
+      res.redirect(`/user/profile/${userId}`);
       // res.render("profile", { Profiled });
     } catch (error) {
       res.send(error);
     }
+  }
+
+  static logout(req, res){
+    req.session.destroy(errpr => {
+      if(error){
+        return res.send(error)
+      }
+      res.redirect("/user/login")
+    })
   }
 }
 

@@ -17,4 +17,6 @@ router.get("/:userId/edit", UserController.formEditProfile);
 
 router.post("/:userId/edit", UserController.postEditProfile);
 
+router.get("/logout", UserController.logout)
+
 module.exports = router;

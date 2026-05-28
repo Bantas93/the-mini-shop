@@ -16,6 +16,11 @@ app.use(
   }),
 );
 
+app.use((req,res,next) => {
+  res.locals.req = req;
+  next();
+})
+
 app.use(router);
 
 app.listen(port, () => {
